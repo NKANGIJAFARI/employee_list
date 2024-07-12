@@ -15,6 +15,8 @@ const EmployeeList = ({ navigation }: any) => {
     try {
       const response = await axios.get('https://dummy.restapiexample.com/api/v1/employees');
       setEmployees(response.data.data);
+
+      console.log(response.data.data[0]);
     } catch (error) {
       console.error(error);
     }

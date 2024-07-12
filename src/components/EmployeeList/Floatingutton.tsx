@@ -1,17 +1,20 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const FloatingButton = () => {
+interface FloatingButtonProps {
+  onPress: () => void;
+}
+
+const FloatingButton: React.FC<FloatingButtonProps> = ({ onPress }) => {
   return (
-      <TouchableOpacity style={styles.button}>
-        <Icon name="add" size={35} color="#fff" />
-      </TouchableOpacity>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
+      <Icon name='add' size={35} color='#fff' />
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
- 
   button: {
     position: 'absolute',
     bottom: 20,

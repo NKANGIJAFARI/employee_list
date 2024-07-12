@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList,  TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+} from 'react-native';
 import axios from 'axios';
 import { Employee } from '../../types';
 import EmployeeCard from '../components/EmployeeList/EmployeeCard';
 import FloatingButton from '../components/EmployeeList/Floatingutton';
 import SearchInput from '../components/EmployeeList/SearchInput';
+import EmployeeCreationForm from '../components/EmployeeList/EmployeeCreationForm';
+
+const { height } = Dimensions.get('window');
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -32,21 +44,39 @@ const EmployeeList = () => {
     );
   };
 
+  // Handle the modal visibility to create new employees
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleFloatingButtonPress = () => {
+    setModalVisible(true);
+  };
+
   return (
     <View style={styles.container}>
-        <SearchInput
-            value={search}
-            onChangeText={setSearch}
-            placeholder="Search..."
-          />
-
+      <SearchInput value={search} onChangeText={setSearch} placeholder='Search...' />
 
       <FlatList
         data={filterEmployees()}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <EmployeeCard item={item} />}
       />
-      <FloatingButton />
+      <FloatingButton onPress={handleFloatingButtonPress} />
+
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <EmployeeCreationForm />
+          <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+            <Text style={styles.closeButtonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -57,25 +87,43 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 
-  searchSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 25,
-    padding: 10,
-    marginBottom: 16,
-  },
-  searchIcon: {
-    padding: 10,
-  },
-  input: {
+  modalContainer: {
     flex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    // justifyContent: 'flex-end',
+  },
+  modalView: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    // justifyContent: "center",
+    // alignContent: "center",
+    alignItems: 'center',
+    height: height / 2,
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  closeButton: {
+    backgroundColor: 'red',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    marginTop: 20,
+    width: '50%',
+  },
+  closeButtonText: {
+    color: '#fff',
     fontSize: 16,
-    color: '#000',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 25,
   },
 });
 

@@ -1,38 +1,38 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
-  Text,
+
   FlatList,
   StyleSheet,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
+  Alert,
+
 } from 'react-native';
 import axios from 'axios';
 import { Employee } from '../../types';
 import EmployeeCard from '../components/EmployeeList/EmployeeCard';
-import FloatingButton from '../components/EmployeeList/Floatingutton';
+import FloatingButton from '../components/EmployeeList/FloatingButton';
 import SearchInput from '../components/EmployeeList/SearchInput';
-import EmployeeCreationForm from '../components/EmployeeList/EmployeeCreationForm';
+import EmployeeModal from '../components/EmployeeList/EmployeeModal';
 import { ActivityIndicator } from 'react-native-paper';
 
-const { height } = Dimensions.get('window');
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+
   const fetchData = useCallback(async () => {
-   
     try {
       const response = await axios.get('https://dummy.restapiexample.com/api/v1/employees');
       setEmployees(response.data.data);
-      console.log(response.data.data[0]);
-
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   }, []);
 
@@ -48,50 +48,65 @@ const EmployeeList = () => {
     );
   };
 
-  // Handle the modal visibility to create new employees
-  const [modalVisible, setModalVisible] = useState(false);
-
   const handleFloatingButtonPress = () => {
+    setIsEditMode(false);
+    setSelectedEmployee(null);
+    setModalVisible(true);
+  };
+
+  const handleEditEmployee = (employee: Employee) => {
+    setIsEditMode(true);
+    setSelectedEmployee(employee);
     setModalVisible(true);
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
+    setSelectedEmployee(null);
   };
 
-  if(loading){
-    return <View>
-      <ActivityIndicator size={"large"} />
-    </View>
+  const handleDeleteEmployee = async (id: string) => {
+    try {
+      const response = await axios.delete(`https://dummy.restapiexample.com/api/v1/delete/${id}`);
+      if (response.status === 200) {
+        Alert.alert('Employee deleted successfully');
+        setEmployees((prevEmployees) => prevEmployees.filter(employee => employee.id !== id));
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error deleting employee');
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
       <SearchInput value={search} onChangeText={setSearch} placeholder='Search...' />
-
       <FlatList
         data={filterEmployees()}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <EmployeeCard item={item} />}
+        renderItem={({ item }) => (
+          <EmployeeCard
+            item={item}
+            onDelete={handleDeleteEmployee}
+            onEdit={handleEditEmployee}
+          />
+        )}
       />
-
       <FloatingButton onPress={handleFloatingButtonPress} />
-
-      <Modal
-        animationType='slide'
-        transparent={true}
+      <EmployeeModal
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.modalView}>
-          <EmployeeCreationForm  onClose={handleCloseModal}/>
-          <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-            <Text style={styles.closeButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+        onClose={handleCloseModal}
+        isEditMode={isEditMode}
+        employee={selectedEmployee}
+      />
     </View>
   );
 };
@@ -101,44 +116,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-
-  modalContainer: {
+  loadingContainer: {
     flex: 1,
-    // justifyContent: 'flex-end',
-  },
-  modalView: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    // justifyContent: "center",
-    // alignContent: "center",
+    justifyContent: 'center',
     alignItems: 'center',
-    height: height / 2,
-    backgroundColor: 'white',
-    padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-
-  closeButton: {
-    backgroundColor: 'red',
-    borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
-    marginTop: 20,
-    width: '50%',
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontSize: 16,
   },
 });
 

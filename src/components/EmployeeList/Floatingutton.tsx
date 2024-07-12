@@ -4,22 +4,18 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const FloatingButton = () => {
   return (
-    <View style={styles.container}>
       <TouchableOpacity style={styles.button}>
-        <Icon name="add" size={30} color="#fff" />
+        <Icon name="add" size={35} color="#fff" />
       </TouchableOpacity>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
+ 
   button: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
     backgroundColor: '#6200ea',
     borderRadius: 50,
     width: 60,

@@ -44,7 +44,6 @@ const EmployeeList = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <EmployeeCard item={item} />}
       />
-
       <FloatingButton />
     </View>
   );

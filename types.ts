@@ -5,4 +5,8 @@ export interface Employee {
     employee_age: string;
     profile_image: string;
   }
+
+  export type RootStackParamList = {
+    EmployeeDetails: { employee: Employee };
+  };
   

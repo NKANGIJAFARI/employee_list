@@ -7,7 +7,10 @@ const EmployeeDetails = ({ route }: any) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: employee.profile_image || 'https://via.placeholder.com/150' }} style={styles.image} />
+      <Image
+        source={{ uri: employee.profile_image || 'https://via.placeholder.com/150' }}
+        style={styles.image}
+      />
       <Text style={styles.text}>Name: {employee.employee_name}</Text>
       <Text style={styles.text}>Salary: {employee.employee_salary}</Text>
       <Text style={styles.text}>Age: {employee.employee_age}</Text>

@@ -45,7 +45,7 @@ const EmployeeList = () => {
         renderItem={({ item }) => <EmployeeCard item={item} />}
       />
 
-  <FloatingButton />
+      <FloatingButton />
     </View>
   );
 };

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   FlatList,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
   Modal,
@@ -15,18 +14,23 @@ import EmployeeCard from '../components/EmployeeList/EmployeeCard';
 import FloatingButton from '../components/EmployeeList/Floatingutton';
 import SearchInput from '../components/EmployeeList/SearchInput';
 import EmployeeCreationForm from '../components/EmployeeList/EmployeeCreationForm';
+import { ActivityIndicator } from 'react-native-paper';
 
 const { height } = Dimensions.get('window');
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchData = useCallback(async () => {
+   
     try {
       const response = await axios.get('https://dummy.restapiexample.com/api/v1/employees');
       setEmployees(response.data.data);
       console.log(response.data.data[0]);
+
+      setLoading(false)
     } catch (error) {
       console.error(error);
     }
@@ -51,6 +55,16 @@ const EmployeeList = () => {
     setModalVisible(true);
   };
 
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  if(loading){
+    return <View>
+      <ActivityIndicator size={"large"} />
+    </View>
+  }
+
   return (
     <View style={styles.container}>
       <SearchInput value={search} onChangeText={setSearch} placeholder='Search...' />
@@ -60,6 +74,7 @@ const EmployeeList = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <EmployeeCard item={item} />}
       />
+
       <FloatingButton onPress={handleFloatingButtonPress} />
 
       <Modal
@@ -71,7 +86,7 @@ const EmployeeList = () => {
         }}
       >
         <View style={styles.modalView}>
-          <EmployeeCreationForm />
+          <EmployeeCreationForm  onClose={handleCloseModal}/>
           <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
             <Text style={styles.closeButtonText}>Cancel</Text>
           </TouchableOpacity>

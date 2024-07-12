@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, Alert, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Alert, View, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import InputWithIcon from './InputWithIcon';
 
-const EmployeeCreationForm: React.FC = () => {
+interface EmployeeCreationFormProps {
+  onClose: () => void;
+}
+
+const EmployeeCreationForm: React.FC<EmployeeCreationFormProps> = ({ onClose }) => {
   const [name, setName] = useState('');
   const [salary, setSalary] = useState('');
   const [age, setAge] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleCreateEmployee = async () => {
     if (name === '' || salary === '' || age === '') {
@@ -15,6 +20,7 @@ const EmployeeCreationForm: React.FC = () => {
     }
 
     try {
+        setLoading(true)
       const response = await axios.post('https://dummy.restapiexample.com/api/v1/create', {
         name,
         salary,
@@ -25,8 +31,12 @@ const EmployeeCreationForm: React.FC = () => {
         setName('');
         setSalary('');
         setAge('');
+        onClose();
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
+
       console.error(error);
       Alert.alert('Error creating employee');
     }
@@ -35,23 +45,30 @@ const EmployeeCreationForm: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Employee</Text>
-      <InputWithIcon icon='person' placeholder='Name' value={name} onChangeText={setName} />
       <InputWithIcon
-        icon='attach-money'
-        placeholder='Salary'
+        icon="person"
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+      />
+      <InputWithIcon
+        icon="attach-money"
+        placeholder="Salary"
         value={salary}
         onChangeText={(text) => setSalary(text.replace(/[^0-9]/g, ''))}
-        keyboardType='numeric'
+        keyboardType="numeric"
       />
       <InputWithIcon
-        icon='calendar-today'
-        placeholder='Age'
+        icon="calendar-today"
+        placeholder="Age"
         value={age}
         onChangeText={(text) => setAge(text.replace(/[^0-9]/g, ''))}
-        keyboardType='numeric'
+        keyboardType="numeric"
       />
       <TouchableOpacity style={styles.button} onPress={handleCreateEmployee}>
-        <Text style={styles.buttonText}>Create Employee</Text>
+       {loading && <ActivityIndicator size="small" style={{marginRight: 10}} />} 
+       
+       <Text style={styles.buttonText}>{loading? "Creating employee..." : "Create Employee"}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -75,11 +92,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     alignItems: 'center',
-    width: '90%',
+    width: "90%",
+    flexDirection: "row",
+    justifyContent: "center",
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    
   },
 });
 

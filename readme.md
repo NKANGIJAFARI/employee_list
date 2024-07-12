@@ -2,6 +2,8 @@
 
 This is a React Native application to manage employee data, including creating, updating, and deleting employee records. The app interfaces with an external API to perform CRUD operations.
 
+##Note: API endpoints are intentionally called inside the components to ease the running process and as matter of fact its a public api.
+
 ## Features
 
 - List employees
@@ -84,10 +86,8 @@ This screen allows the user to search for employees by name.
 
 This screen shows an error message when there is a failure to save an employee. The error message "Request failed with status code 429" indicates that the application has hit the rate limit for API requests.
 
-## Contributing
-
-If you would like to contribute to this project, please fork the repository and create a pull request. Make sure to follow the coding standards and include tests for any new features or bug fixes.
-
+## Conclusion
+Please don't hesitate to raech out to me for the clarification of things.
 ## License
 
 This project is licensed under the MIT License.

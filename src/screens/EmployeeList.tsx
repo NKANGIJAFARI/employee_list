@@ -1,22 +1,38 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList,  TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+
+  FlatList,
+  StyleSheet,
+  Alert,
+
+} from 'react-native';
 import axios from 'axios';
 import { Employee } from '../../types';
 import EmployeeCard from '../components/EmployeeList/EmployeeCard';
-import FloatingButton from '../components/EmployeeList/Floatingutton';
+import FloatingButton from '../components/EmployeeList/FloatingButton';
 import SearchInput from '../components/EmployeeList/SearchInput';
+import EmployeeModal from '../components/EmployeeList/EmployeeModal';
+import { ActivityIndicator } from 'react-native-paper';
+
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get('https://dummy.restapiexample.com/api/v1/employees');
       setEmployees(response.data.data);
-      console.log(response.data.data[0]);
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   }, []);
 
@@ -32,21 +48,65 @@ const EmployeeList = () => {
     );
   };
 
+  const handleFloatingButtonPress = () => {
+    setIsEditMode(false);
+    setSelectedEmployee(null);
+    setModalVisible(true);
+  };
+
+  const handleEditEmployee = (employee: Employee) => {
+    setIsEditMode(true);
+    setSelectedEmployee(employee);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedEmployee(null);
+  };
+
+  const handleDeleteEmployee = async (id: string) => {
+    try {
+      const response = await axios.delete(`https://dummy.restapiexample.com/api/v1/delete/${id}`);
+      if (response.status === 200) {
+        Alert.alert('Employee deleted successfully');
+        setEmployees((prevEmployees) => prevEmployees.filter(employee => employee.id !== id));
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error deleting employee');
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-        <SearchInput
-            value={search}
-            onChangeText={setSearch}
-            placeholder="Search..."
-          />
-
-
+      <SearchInput value={search} onChangeText={setSearch} placeholder='Search...' />
       <FlatList
         data={filterEmployees()}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <EmployeeCard item={item} />}
+        renderItem={({ item }) => (
+          <EmployeeCard
+            item={item}
+            onDelete={handleDeleteEmployee}
+            onEdit={handleEditEmployee}
+          />
+        )}
       />
-      <FloatingButton />
+      <FloatingButton onPress={handleFloatingButtonPress} />
+      <EmployeeModal
+        visible={modalVisible}
+        onClose={handleCloseModal}
+        isEditMode={isEditMode}
+        employee={selectedEmployee}
+      />
     </View>
   );
 };
@@ -56,26 +116,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-
-  searchSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 25,
-    padding: 10,
-    marginBottom: 16,
-  },
-  searchIcon: {
-    padding: 10,
-  },
-  input: {
+  loadingContainer: {
     flex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: '#000',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

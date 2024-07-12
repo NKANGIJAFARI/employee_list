@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList,  TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Employee } from '../../types';
 import EmployeeCard from '../components/EmployeeList/EmployeeCard';
+import FloatingButton from '../components/EmployeeList/Floatingutton';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -43,6 +44,8 @@ const EmployeeList = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <EmployeeCard item={item} />}
       />
+
+  <FloatingButton />
     </View>
   );
 };

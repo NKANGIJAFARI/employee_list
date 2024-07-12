@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Employee } from '../../types';
 import EmployeeCard from '../components/EmployeeList/EmployeeCard';
 import FloatingButton from '../components/EmployeeList/Floatingutton';
+import SearchInput from '../components/EmployeeList/SearchInput';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -33,12 +34,13 @@ const EmployeeList = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder='Search for employee'
-        value={search}
-        onChangeText={setSearch}
-      />
+        <SearchInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search..."
+          />
+
+
       <FlatList
         data={filterEmployees()}
         keyExtractor={(item) => item.id}
@@ -54,12 +56,26 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+
+  searchSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 25,
+    padding: 10,
     marginBottom: 16,
-    paddingHorizontal: 8,
+  },
+  searchIcon: {
+    padding: 10,
+  },
+  input: {
+    flex: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: '#000',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 25,
   },
 });
 

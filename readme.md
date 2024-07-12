@@ -2,6 +2,39 @@
 
 This is a React Native application to manage employee data, including creating, updating, and deleting employee records. The app interfaces with an external API to perform CRUD operations.
 
+## Screenshots
+
+### Employee List
+
+<img src="https://github.com/user-attachments/assets/8857902b-b81b-40e4-9ca4-05c3d11ad32a" alt="Employee List" width="200">
+
+This screen shows a list of all employees with options to edit or delete each employee.
+
+### Create Employee
+
+<img src="https://github.com/user-attachments/assets/482bcc27-0cf0-4067-bd2b-a08458dca9d5" alt="Create Employee" width="200">
+
+This screen allows the user to create a new employee by entering the name, salary, and age.
+
+### Edit Employee
+
+<img src="https://github.com/user-attachments/assets/3dc449fa-1df4-47a1-b971-441511b9862f" alt="Edit Employee" width="200">
+
+This screen allows the user to edit the details of an existing employee.
+
+### Search Employee
+
+<img src="https://github.com/user-attachments/assets/914a2eb1-bf37-44bd-a1d3-3ff59cf6be05" alt="Search Employee" width="200">
+
+This screen allows the user to search for employees by name.
+
+### Error Saving Employee
+
+<img src="https://github.com/user-attachments/assets/f63e07c8-6046-4cfd-91d2-a1b0716007c3" alt="Error Saving Employee" width="200">
+
+This screen shows an error message when there is a failure to save an employee. The error message "Request failed with status code 429" indicates that the application has hit the rate limit for API requests.
+
+
 ##Note: API endpoints are intentionally called inside the components to ease the running process and as matter of fact its a public api.
 
 ## Features
@@ -54,37 +87,6 @@ This will start the Expo development server. You can run the app on an Android o
 - `package.json`: Lists dependencies and scripts.
 - `yarn.lock`: Yarn lockfile to ensure consistent dependency versions.
 
-## Screenshots
-
-### Employee List
-
-<img src="https://github.com/user-attachments/assets/8857902b-b81b-40e4-9ca4-05c3d11ad32a" alt="Employee List" width="200">
-
-This screen shows a list of all employees with options to edit or delete each employee.
-
-### Create Employee
-
-<img src="https://github.com/user-attachments/assets/482bcc27-0cf0-4067-bd2b-a08458dca9d5" alt="Create Employee" width="200">
-
-This screen allows the user to create a new employee by entering the name, salary, and age.
-
-### Edit Employee
-
-<img src="https://github.com/user-attachments/assets/3dc449fa-1df4-47a1-b971-441511b9862f" alt="Edit Employee" width="200">
-
-This screen allows the user to edit the details of an existing employee.
-
-### Search Employee
-
-<img src="https://github.com/user-attachments/assets/914a2eb1-bf37-44bd-a1d3-3ff59cf6be05" alt="Search Employee" width="200">
-
-This screen allows the user to search for employees by name.
-
-### Error Saving Employee
-
-<img src="https://github.com/user-attachments/assets/f63e07c8-6046-4cfd-91d2-a1b0716007c3" alt="Error Saving Employee" width="200">
-
-This screen shows an error message when there is a failure to save an employee. The error message "Request failed with status code 429" indicates that the application has hit the rate limit for API requests.
 
 ## Conclusion
 Please don't hesitate to raech out to me for the clarification of things.
